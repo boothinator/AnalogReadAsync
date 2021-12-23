@@ -41,4 +41,4 @@ void setup() {
 
 You can also enable a "free-running" mode, where a new analog read starts as soon as the previous one finishes. Simply call `setAnalogReadFreeRunning(true)` to enable free-running. Free-running works with both a callback and polling.
 
-Note that you will get one more analog read if you disable free running in the callback. This is because a new read operation has already started by the time the callback is called.
+Note that you will get one more analog read if you disable free running while in the callback. This is because a new read operation has already started by the time the callback is called.
