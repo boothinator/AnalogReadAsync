@@ -21,6 +21,10 @@
 
 typedef void (*analogReadCompleteCallback_t)(uint16_t value, void *data);
 
-void analogReadAsync(uint8_t pin, analogReadCompleteCallback_t cb, const void *data = nullptr);
+void analogReadAsync(uint8_t pin, analogReadCompleteCallback_t cb = nullptr, const void *data = nullptr);
+
+bool analogReadComplete();
+
+uint16_t getAnalogReadValue();
 
 #endif // ANALOG_READ_ASYNC_H_

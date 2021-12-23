@@ -18,6 +18,7 @@
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include <util/atomic.h>
 #include <stdint.h>
 
 static volatile analogReadCompleteCallback_t analogReadCompleteCallback = nullptr;
@@ -54,8 +55,14 @@ void analogReadAsync(uint8_t pin, analogReadCompleteCallback_t cb, const void *d
   analogReadCompleteCallback = cb;
 	analogReadCompleteCallbackData = data;
 
-	// start the conversion and enable interrupt
-	ADCSRA |= (1 << ADIE) | (1 << ADSC);
+	// start the conversion
+	ADCSRA |= (1 << ADSC);
+
+	// enable the interrupt
+	if (cb)
+	{
+		ADCSRA |= (1 << ADIE);
+	}
 }
 
 ISR(ADC_vect)
@@ -72,4 +79,21 @@ ISR(ADC_vect)
   {
     cb(ADC, const_cast<void *>(data));
   }
+}
+
+bool analogReadComplete()
+{
+	return (ADCSRA & _BV(ADSC)) == 0;
+}
+
+uint16_t getAnalogReadValue()
+{
+	uint16_t tmp;
+	
+  ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
+	{
+		tmp = ADC;
+	}
+
+	return tmp;
 }
