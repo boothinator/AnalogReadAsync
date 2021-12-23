@@ -13,6 +13,9 @@ void setup() {
   
     uint16_t value = getAnalogReadValue();
 
+    Serial.print("Sample ");
+    Serial.print(numSamples + 1);
+    Serial.print(": ");
     Serial.println(value);
   }
   
