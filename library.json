@@ -1,0 +1,22 @@
+{
+  "name": "AnalogReadAsync",
+  "version": "0.0.1",
+  "description": "Asynchronous version of analogRead(). Lets you do other processing while waiting for the analog read to complete. Can notify you when the read is complete by callback, or you can poll for when the read is complete.",
+  "keywords": "analog async asynchronous",
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/boothinator/AnalogReadAsync.git"
+  },
+  "authors":
+  [
+    {
+      "name": "Joshua Booth",
+      "email": "boothin8or@gmail.com"
+    }
+  ],
+  "license": "LGPL-3.0-or-later",
+  "homepage": "https://github.com/boothinator/AnalogReadAsync",
+  "frameworks": ["arduino"],
+  "platforms": "atmelavr"
+}
