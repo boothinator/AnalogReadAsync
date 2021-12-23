@@ -24,12 +24,12 @@
 static volatile analogReadCompleteCallback_t analogReadCompleteCallback = nullptr;
 static const void * volatile analogReadCompleteCallbackData = nullptr;
 
-constexpr bool getAutoTriggeringEnabled()
+bool getAutoTriggeringEnabled()
 {
 	return (ADCSRA & _BV(ADATE)) == _BV(ADATE);
 }
 
-constexpr bool inFreeRunningMode()
+bool inFreeRunningMode()
 {
 	return (ADCSRB & (_BV(ADTS2) | _BV(ADTS1) | _BV(ADTS0))) == 0;
 }
@@ -84,8 +84,6 @@ ISR(ADC_vect)
   analogReadCompleteCallback_t cb = analogReadCompleteCallback;
 	const void *data = analogReadCompleteCallbackData;
 
-	bool autoTriggeringDisabled = (ADCSRA & _BV(ADATE)) == 0;
-
 	// Only disable interrupt if auto-triggering is disabled
 	if (!getAutoTriggeringEnabled())
 	{
@@ -101,9 +99,24 @@ ISR(ADC_vect)
   }
 }
 
-bool analogReadComplete()
+bool analogReadComplete(bool clearInterruptFlag)
 {
-	return (ADCSRA & _BV(ADSC)) == 0;
+	bool complete;
+	if (getAutoTriggeringEnabled())
+	{
+		complete = (ADCSRA & _BV(ADIF)) == _BV(ADIF);
+	}
+	else
+	{
+		complete = (ADCSRA & _BV(ADSC)) == 0;
+	}
+
+	if (complete && clearInterruptFlag)
+	{
+		ADCSRA |= _BV(ADIF);
+	}
+
+	return complete;
 }
 
 uint16_t getAnalogReadValue()

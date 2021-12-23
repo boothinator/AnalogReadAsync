@@ -23,7 +23,7 @@ typedef void (*analogReadCompleteCallback_t)(uint16_t value, void *data);
 
 void analogReadAsync(uint8_t pin, analogReadCompleteCallback_t cb = nullptr, const void *data = nullptr);
 
-bool analogReadComplete();
+bool analogReadComplete(bool clearInterruptFlag = true);
 
 uint16_t getAnalogReadValue();
 
