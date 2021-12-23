@@ -11,8 +11,9 @@ void analogReadComplete(uint16_t value, void *data)
   Serial.print(": ");
   Serial.println(value);
 
-  if (numSamples >= 10)
+  if (numSamples >= 9)
   {
+    // Note that we'll get one more analog read after disabling free-running
     setAnalogReadFreeRunning(false);
   }
 }
