@@ -10,34 +10,31 @@ Lets you do other processing while waiting for the analog read to complete. Can 
 
 Using polling allows you to do other operations while waiting for the analog read to complete. This works the same way as the traditional analogRead(), but with a way for you to do useful work while waiting.
 
-`analogReadAsync(A0);`
+```C++
+analogReadAsync(A0);
+while (!analogReadComplete()) {
 
-`while (!analogReadComplete()) {`
-
-`  // Do stuff while waiting`
-
-`}`
-
-`uint16_t value = getAnalogReadValue();`
+  // Do stuff while waiting
+}
+uint16_t value = getAnalogReadValue();
+```
 
 
 ### Callback
 
 You can provide a callback that will be called when the read is complete. The callback will receive the read value, plus a pointer to any data you might want to pass to the callback.
 
-`void analogReadComplete(uint16_t value, void *data)`
+```C++
+void analogReadComplete(uint16_t value, void *data)
+{
+  Serial.println(value);
 
-`{`
+}
 
-`  Serial.println(value);`
-
-`}`
-
-`void setup() {`
-
-`  analogReadAsync(A0, analogReadComplete);`
-
-`}`
+void setup() {
+  analogReadAsync(A0, analogReadComplete);
+}
+```
 
 ### Free-Running Mode
 
