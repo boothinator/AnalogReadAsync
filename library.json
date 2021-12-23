@@ -1,8 +1,8 @@
 {
   "name": "AnalogReadAsync",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Asynchronous version of analogRead(). Lets you do other processing while waiting for the analog read to complete. Can notify you when the read is complete by callback, or you can poll for when the read is complete.",
-  "keywords": "analog async asynchronous",
+  "keywords": "analog async asynchronous free-running",
   "repository":
   {
     "type": "git",
