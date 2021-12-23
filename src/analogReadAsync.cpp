@@ -99,7 +99,7 @@ ISR(ADC_vect)
   }
 }
 
-bool analogReadComplete(bool clearInterruptFlag)
+bool getAnalogReadComplete(bool clearInterruptFlag)
 {
 	bool complete;
 	if (getAutoTriggeringEnabled())

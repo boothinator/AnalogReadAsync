@@ -9,7 +9,7 @@ void setup() {
 
   for (int numSamples = 0; numSamples <10; numSamples++)
   {
-    while (!analogReadComplete());
+    while (!getAnalogReadComplete());
   
     uint16_t value = getAnalogReadValue();
 

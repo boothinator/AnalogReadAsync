@@ -5,7 +5,7 @@ void setup() {
   
   analogReadAsync(A0);
   
-  while (!analogReadComplete());
+  while (!getAnalogReadComplete());
 
   uint16_t value = getAnalogReadValue();
 
