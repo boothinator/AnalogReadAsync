@@ -12,10 +12,11 @@ Using polling allows you to do other operations while waiting for the analog rea
 
 ```C++
 analogReadAsync(A0);
-while (!analogReadComplete()) {
 
+while (!analogReadComplete()) {
   // Do stuff while waiting
 }
+
 uint16_t value = getAnalogReadValue();
 ```
 
