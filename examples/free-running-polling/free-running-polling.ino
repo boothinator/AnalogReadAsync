@@ -1,0 +1,24 @@
+#include <analogReadAsync.h>
+
+void setup() {
+  Serial.begin(115200);
+
+  setAnalogReadFreeRunning(true);
+  
+  analogReadAsync(A0);
+
+  for (int numSamples = 0; numSamples <10; numSamples++)
+  {
+    while (!analogReadComplete());
+  
+    uint16_t value = getAnalogReadValue();
+
+    Serial.println(value);
+  }
+  
+  setAnalogReadFreeRunning(false);
+}
+
+void loop() {
+
+}

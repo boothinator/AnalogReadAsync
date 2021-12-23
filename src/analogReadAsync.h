@@ -27,4 +27,6 @@ bool analogReadComplete();
 
 uint16_t getAnalogReadValue();
 
+void setAnalogReadFreeRunning(bool enable);
+
 #endif // ANALOG_READ_ASYNC_H_

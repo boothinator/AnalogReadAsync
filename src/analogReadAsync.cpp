@@ -24,6 +24,16 @@
 static volatile analogReadCompleteCallback_t analogReadCompleteCallback = nullptr;
 static const void * volatile analogReadCompleteCallbackData = nullptr;
 
+constexpr bool getAutoTriggeringEnabled()
+{
+	return (ADCSRA & _BV(ADATE)) == _BV(ADATE);
+}
+
+constexpr bool inFreeRunningMode()
+{
+	return (ADCSRB & (_BV(ADTS2) | _BV(ADTS1) | _BV(ADTS0))) == 0;
+}
+
 void analogReadAsync(uint8_t pin, analogReadCompleteCallback_t cb, const void *data)
 {
 #if defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
@@ -55,8 +65,12 @@ void analogReadAsync(uint8_t pin, analogReadCompleteCallback_t cb, const void *d
   analogReadCompleteCallback = cb;
 	analogReadCompleteCallbackData = data;
 
-	// start the conversion
-	ADCSRA |= (1 << ADSC);
+	// Only start conversion if auto-triggering is disabled or in free-running mode
+	if (!getAutoTriggeringEnabled() || inFreeRunningMode())
+	{
+		// start the conversion
+		ADCSRA |= (1 << ADSC);
+	}
 
 	// enable the interrupt
 	if (cb)
@@ -70,10 +84,16 @@ ISR(ADC_vect)
   analogReadCompleteCallback_t cb = analogReadCompleteCallback;
 	const void *data = analogReadCompleteCallbackData;
 
-  // Disable interrupt and clear global callback and data before calling to allow for another call from the callback
-	ADCSRA &= ~(1 << ADIE);
-  analogReadCompleteCallback = nullptr;
-	analogReadCompleteCallbackData = nullptr;
+	bool autoTriggeringDisabled = (ADCSRA & _BV(ADATE)) == 0;
+
+	// Only disable interrupt if auto-triggering is disabled
+	if (!getAutoTriggeringEnabled())
+	{
+		// Disable interrupt and clear global callback and data before calling to allow for another call from the callback
+		ADCSRA &= ~(1 << ADIE);
+		analogReadCompleteCallback = nullptr;
+		analogReadCompleteCallbackData = nullptr;
+	}
 	
   if (cb)
   {
@@ -89,11 +109,28 @@ bool analogReadComplete()
 uint16_t getAnalogReadValue()
 {
 	uint16_t tmp;
-	
+
   ATOMIC_BLOCK(ATOMIC_RESTORESTATE)
 	{
 		tmp = ADC;
 	}
 
 	return tmp;
+}
+
+void setAnalogReadFreeRunning(bool enable)
+{
+	if (enable)
+	{
+		// Enable auto-trigger
+		ADCSRA |= _BV(ADATE);
+
+		// Set to free-running mode
+		ADCSRB &=  ~(_BV(ADTS2) | _BV(ADTS1) | _BV(ADTS0));
+	}
+	else
+	{
+		// Disable auto-trigger
+		ADCSRA &= ~_BV(ADATE);
+	}
 }
