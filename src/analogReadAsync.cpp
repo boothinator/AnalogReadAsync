@@ -20,7 +20,7 @@
 #include <avr/interrupt.h>
 #include <util/atomic.h>
 #include <stdint.h>
-#include <Arduino.h>
+#include <pins_arduino.h>
 
 static volatile analogReadCompleteCallback_t analogReadCompleteCallback = nullptr;
 static const void * volatile analogReadCompleteCallbackData = nullptr;
